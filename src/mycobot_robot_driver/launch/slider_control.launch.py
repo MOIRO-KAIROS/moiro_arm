@@ -65,7 +65,7 @@ def generate_launch_description():
     res.append(rviz_node)
     
     slider_control_node = Node(
-        package="mycobot_320",
+        package="mycobot_robot_driver",
         executable="slider_control",
         name="slider_control",
         output="screen"
