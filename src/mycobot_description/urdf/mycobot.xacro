@@ -362,7 +362,7 @@
   <parent link="gripper_right3"/>
   <child link="gripper_right1"/>
   <axis xyz="-0.0 -0.0 -1.0"/>
-  <limit upper="0.698132" lower="0.0" effort="100" velocity="100"/>
+  <limit upper="0.0" lower="-0.698132" effort="100" velocity="100"/>
   <mimic joint="gripper_controller" multiplier="-1" offset="0"/>
 </joint>
 
