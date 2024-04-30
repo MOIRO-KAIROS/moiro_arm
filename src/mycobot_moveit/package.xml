@@ -4,7 +4,7 @@
   <name>mycobot_moveit</name>
   <version>0.3.0</version>
   <description>
-     An automatically generated package with all the configuration and launch files for using the mycobot320 with the MoveIt Motion Planning Framework
+     An automatically generated package with all the configuration and launch files for using the mycobot with the MoveIt Motion Planning Framework
   </description>
   <maintainer email="mincheol710313@gmail.com">godssi</maintainer>
 
