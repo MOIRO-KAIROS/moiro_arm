@@ -26,6 +26,8 @@ class MyCobotListener(Node):
 
         self.get_logger().info(f'port: {port}, baud: {baud}')
         self.mycobot = MyCobot(port, str(baud))
+        self.mycobot.set_gripper_mode(0)
+        self.mycobot.init_eletric_gripper()
         time.sleep(0.05)
         self.mycobot.set_free_mode(1)
         time.sleep(0.05)
@@ -33,16 +35,20 @@ class MyCobotListener(Node):
 
     def listener_callback(self, msg):
         data_list = []
+        # print(msg.name)
         joint_data = sorted(zip(msg.name, msg.position), key=lambda x: x[0])
         msg.name, msg.position = zip(*joint_data)
         msg.position = list(msg.position)
-        msg.position[2] = -1 * msg.position[2]
+        msg.position[3] = -1 * msg.position[3]
+        # print(msg.name)
+        print("===="*3)
 
         data_list = [round(math.degrees(pos), 2) for pos in msg.position]
         global tm
         tm += 1
-        self.mycobot.send_angles(data_list, 80)
-        self.get_logger().info(f'joint angles: {data_list}, {tm}')
+        self.mycobot.send_angles(data_list[1:], 80)
+        self.mycobot.set_gripper_value(int(data_list[0]), 20, 1)
+        self.get_logger().info(f'joint angles: {msg}, {tm}')
 
 def main(args=None):
     rclpy.init(args=args)
