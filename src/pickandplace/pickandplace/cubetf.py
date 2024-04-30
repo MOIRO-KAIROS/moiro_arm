@@ -25,7 +25,7 @@ class CubeDetectionNode(Node):
         self.dist_coeffs = calibrationParams.getNode("distCoeffs").mat()
         self.camera_matrix = None
 
-        self.tf_broadcaster = tf2_ros.StaticTransformBroadcaster(self)  # TF Broadcaster 생성
+        self.tf_broadcaster = tf2_ros.TransformBroadcaster(self)  # TF Broadcaster 생성
         self.center_publisher = self.create_publisher(Point,'cube',10)
         self.img_publisher = self.create_publisher(Image,'cube_img',10)
 
@@ -84,7 +84,7 @@ class CubeDetectionNode(Node):
                 0.03,
             )
         xyz = tvec[0, 0, :]
-        xyz = [xyz[0] - 0.045, xyz[1], xyz[2] - 0.03]
+        xyz = [xyz[0], xyz[1], xyz[2] -0.06]
 
         # get quaternion for ros.
         euler = rvec[0, 0, :]
@@ -97,35 +97,36 @@ class CubeDetectionNode(Node):
         t.header.frame_id = 'camera_color_frame'
         t.child_frame_id = f"{color}_cube_frame_{idx}"
 
-        t.transform.translation.x = xyz[0]
-        t.transform.translation.y = xyz[1]
-        t.transform.translation.z = xyz[2]
+        t.transform.translation.x = xyz[2]
+        t.transform.translation.y = -xyz[0]
+        t.transform.translation.z = -xyz[1]
         
-        t.transform.rotation.x = tf_change[0]
-        t.transform.rotation.y = tf_change[1]
-        t.transform.rotation.z = tf_change[2]
-        t.transform.rotation.w = tf_change[3]
+        t.transform.rotation.x = tf_change[3]
+        t.transform.rotation.y = tf_change[0]
+        t.transform.rotation.z = tf_change[1]
+        t.transform.rotation.w = tf_change[2]
         self.tf_broadcaster.sendTransform(t)
 
-        self.center_publisher.publish(Point(x=xyz[0], y=xyz[1], z=xyz[2]))
+        self.center_publisher.publish(Point(x=xyz[2], y=xyz[0], z=xyz[1]))
         idx+=1
-        self.get_logger().info(f"color : {color}, x: {xyz[0]}, y: {xyz[1]},z: {xyz[2]}")
+        self.get_logger().info(f"color : {color}, x: {(xyz[2])}, y: {(xyz[0])},z: {(xyz[1])}")
+        self.get_logger().info(f"rot x: {tf_change[3]}, y: {(tf_change[0])},z: {(tf_change[1])}, w: {tf_change[2]}")
         return idx,frame
 
 
 
     def detect_cubes(self, frame, color):
+        # 색상 범위 지정
         if color == 'blue':
-            # 색상 범위 지정 (여기서는 예시로 파란색 큐브를 감지)
-            low = np.array([90, 50, 50])
+            low = np.array([78, 43, 46])
             up = np.array([110, 255, 255])
         elif color == 'red':
-            low = np.array([-10, 50, 50])
+            low = np.array([0, 43, 46])
             up = np.array([20, 255, 255])
         elif color == 'yellow':
-            low = np.array([20, 50, 50])
-            up = np.array([70, 255, 255])
-        else:
+            low = np.array([11, 85, 70])
+            up = np.array([59, 255, 245])
+        else:  # Purple
             low = np.array([100, 50, 50])
             up = np.array([140, 255, 255])
 
