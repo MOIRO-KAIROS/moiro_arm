@@ -31,7 +31,7 @@ class CameraPosition(Node):
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
 
         # pub
-        self.pose_publisher = self.create_publisher(PoseStamped, 'object_pose', 10)
+        self.pose_publisher = self.create_publisher(PoseStamped, 'cube_pose', 10)
 
         self.cube_x = 0
         self.cube_y = 0
@@ -63,20 +63,29 @@ class CameraPosition(Node):
             if not self.non_detected:
                 # self.get_logger().info('start to publish pose')
                 # Convert pixel coordinates to camera coordinates
-                image_center = [640, 360]  # Assuming image center at (640, 360)
-                focal_length = 1000  # Focal length in pixels (example value)
+                image_center = [321.72564697, 241.86355591]  # Assuming image center at (640, 360)
+                focal_length = 384.64208984  # Focal length in pixels (example value)
                 camera_coords = self.pixel_to_camera_coordinates(self.cube_x, self.cube_y, self.cube_depth,
                                                                  focal_length, image_center)
 
                 # Get the transform from camera_link to world
                 try:
-                    ##transform = self.tf_buffer.lookup_transform('base_link', self.camera_link, rclpy.time.Time())
                     transform = self.tf_buffer.lookup_transform('camera_link', self.camera_link, rclpy.time.Time())
+                    # transform = self.tf_buffer.lookup_transform('camera_link', self.camera_link, rclpy.time.Time())
                     camera_position = np.array([transform.transform.translation.x,
                                                 transform.transform.translation.y,
                                                 transform.transform.translation.z])
                     camera_orientation = transform.transform.rotation
                     # self.get_logger().info('finish camera_position')
+
+                    # Camera 보정 ( D435 카메라 중심과 Color 카메라의 위치가 일치하지 않음 )
+                    if (camera_position[0] >= 0.1): camera_position[0] *= 0.6
+                    elif (camera_position[0] >= 0.070): camera_position[0] -= 0.070
+                    elif (camera_position[0] >= 0.035): camera_position[0] -= 0.035
+                    elif (camera_position[0] > 0): camera_position[0] = 0.000
+                    elif (camera_position[0] <= -0.1): camera_position[0] *= 0.8
+
+                    if (abs(camera_position[1]) >= 0.1): camera_position[1] *= 0.8
 
                     # Convert quaternion to rotation matrix
                     R = self.quaternion_to_rotation_matrix(camera_orientation)
@@ -99,7 +108,7 @@ class CameraPosition(Node):
 
                 self.non_detected = True  # Reset the detection flag after processing
 
-            time.sleep(1)
+            time.sleep(0.5)
 
     def quaternion_to_rotation_matrix(self, quaternion):
         # Convert quaternion to rotation matrix
