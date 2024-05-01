@@ -350,15 +350,15 @@
 </joint>
 
 <joint name="gripper_controller" type="revolute">
-  <origin xyz="0.06039 0.01822 0.003642" rpy="0 0 0"/>
+  <origin xyz="0.06039 0.01822 0.003642" rpy="0 0 -0.42"/>
   <parent link="gripper_base"/>
   <child link="gripper_right3"/>
   <axis xyz="0.0 -0.0 -1.0"/>
-  <limit upper="0.698132" lower="0.0" effort="100" velocity="100"/>
+  <limit upper="0.3" lower="-0.7" effort="100" velocity="100"/>
 </joint>
 
 <joint name="gripper_right3_to_gripper_right1" type="revolute">
-  <origin xyz="0.051048 0.033005 9.8e-05" rpy="0 0 0"/>
+  <origin xyz="0.051048 0.033005 9.8e-05" rpy="0 0 0.42"/>
   <parent link="gripper_right3"/>
   <child link="gripper_right1"/>
   <axis xyz="-0.0 -0.0 -1.0"/>
@@ -376,7 +376,7 @@
 </joint> -->
 
 <joint name="gripper_left3_to_gripper_left1" type="revolute">
-  <origin xyz="0.051048 -0.033005 0.0035" rpy="0 0 0"/>
+  <origin xyz="0.051048 -0.033005 0.0035" rpy="0 0 -0.42"/>
   <parent link="gripper_left3"/>
   <child link="gripper_left1"/>
   <axis xyz="0.0 0.0 1.0"/>
@@ -385,7 +385,7 @@
 </joint>
 
 <joint name="gripper_base_to_gripper_left3" type="revolute">
-  <origin xyz="0.06039 -0.01846 0.003642" rpy="0 0 0"/>
+  <origin xyz="0.06039 -0.01846 0.003642" rpy="0 0 0.42"/>
   <parent link="gripper_base"/>
   <child link="gripper_left3"/>
   <axis xyz="0.0 -0.0 -1.0"/>
