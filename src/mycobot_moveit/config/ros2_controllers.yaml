@@ -7,8 +7,8 @@ controller_manager:
       type: joint_trajectory_controller/JointTrajectoryController
 
 
-    hand_controller:
-      type: position_controllers/GripperActionController
+    gripper_group_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
 
 
     joint_state_broadcaster:
@@ -28,6 +28,12 @@ mycobot_arm_controller:
     state_interfaces:
       - position
       - velocity
-hand_controller:
+gripper_group_controller:
   ros__parameters:
-    joint: gripper_controller
+    joints:
+      - gripper_controller
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
