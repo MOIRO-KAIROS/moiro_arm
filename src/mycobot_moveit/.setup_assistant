@@ -1,13 +1,13 @@
 moveit_setup_assistant_config:
   urdf:
     package: mycobot_description
-    relative_path: urdf/mycobot320.urdf.xacro
+    relative_path: urdf/mycobot.xacro
   srdf:
-    relative_path: config/mycobot320.srdf
+    relative_path: config/mycobot.srdf.xacro
   package_settings:
     author_name: godssi
     author_email: mincheol710313@gmail.com
-    generated_timestamp: 1714390980
+    generated_timestamp: 1714539643
   control_xacro:
     command:
       - position

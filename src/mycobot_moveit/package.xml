@@ -4,7 +4,7 @@
   <name>mycobot_moveit</name>
   <version>0.3.0</version>
   <description>
-     An automatically generated package with all the configuration and launch files for using the mycobot320 with the MoveIt Motion Planning Framework
+     An automatically generated package with all the configuration and launch files for using the mycobot with the MoveIt Motion Planning Framework
   </description>
   <maintainer email="mincheol710313@gmail.com">godssi</maintainer>
 
@@ -17,6 +17,8 @@
   <author email="mincheol710313@gmail.com">godssi</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>moveit_task_constructor_core</depend>
+  <depend>rclcpp</depend>
 
   <exec_depend>moveit_ros_move_group</exec_depend>
   <exec_depend>moveit_kinematics</exec_depend>
