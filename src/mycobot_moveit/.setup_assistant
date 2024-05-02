@@ -3,7 +3,7 @@ moveit_setup_assistant_config:
     package: mycobot_description
     relative_path: urdf/mycobot.xacro
   srdf:
-    relative_path: config/mycobot.srdf
+    relative_path: config/mycobot.srdf.xacro
   package_settings:
     author_name: godssi
     author_email: mincheol710313@gmail.com
