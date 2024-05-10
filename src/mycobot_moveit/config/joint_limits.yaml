@@ -36,7 +36,7 @@ joint_limits:
   joint6_to_joint5:
     has_velocity_limits: true
     max_velocity: 100.0
-    has_azcceleration_limits: true
+    has_acceleration_limits: true
     max_acceleration: 1.0
   joint6output_to_joint6:
     has_velocity_limits: true

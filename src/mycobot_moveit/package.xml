@@ -17,8 +17,6 @@
   <author email="mincheol710313@gmail.com">godssi</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <depend>moveit_task_constructor_core</depend>
-  <depend>rclcpp</depend>
 
   <exec_depend>moveit_ros_move_group</exec_depend>
   <exec_depend>moveit_kinematics</exec_depend>
