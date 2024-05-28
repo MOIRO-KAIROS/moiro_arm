@@ -52,13 +52,12 @@ void MTCTaskNode::setupPlanningScene()
   object.id = "object";
   object.header.frame_id = "world";
   object.primitives.resize(1);
-  object.primitives[0].type = shape_msgs::msg::SolidPrimitive::CYLINDER;
-  object.primitives[0].dimensions = { 0.3, 0.02 };
+  object.primitives[0].type = shape_msgs::msg::SolidPrimitive::BOX;
+  object.primitives[0].dimensions = { 0.03, 0.03, 0.03 };
 
   geometry_msgs::msg::Pose pose;
   pose.position.x = 0.3;
   pose.position.y = 0.2;
-  pose.position.z = 0.1;
   pose.orientation.w = 1.0;
   object.pose = pose;
 
@@ -80,7 +79,7 @@ void MTCTaskNode::doTask()
     return;
   }
 
-  if (!task_.plan(5))
+  if (!task_.plan(2))
   {
     RCLCPP_ERROR_STREAM(LOGGER, "Task planning failed");
     return;
@@ -123,6 +122,7 @@ mtc::Task MTCTaskNode::createTask()
   task.add(std::move(stage_state_current));
 
   auto sampling_planner = std::make_shared<mtc::solvers::PipelinePlanner>(node_);
+  sampling_planner->setProperty("goal_joint_tolerance", 1e-5); // 
   auto interpolation_planner = std::make_shared<mtc::solvers::JointInterpolationPlanner>();
 
   auto cartesian_planner = std::make_shared<mtc::solvers::CartesianPath>();
@@ -139,7 +139,7 @@ mtc::Task MTCTaskNode::createTask()
   // Move to pick pose
   auto stage_move_to_pick = std::make_unique<mtc::stages::Connect>(
       "move to pick", 
-      mtc::stages::Connect::GroupPlannerVector({ { arm_group_name, interpolation_planner } }));
+      mtc::stages::Connect::GroupPlannerVector({ { arm_group_name, sampling_planner } })); // 
   stage_move_to_pick->setTimeout(5.0);
   stage_move_to_pick->properties().configureInitFrom(mtc::Stage::PARENT);
   task.add(std::move(stage_move_to_pick));
@@ -155,10 +155,10 @@ mtc::Task MTCTaskNode::createTask()
       stage->properties().set("marker_ns", "approach");
       stage->properties().set("gripper_base", hand_frame);
       stage->properties().configureInitFrom(mtc::Stage::PARENT, { "group" });
-      stage->setMinMaxDistance(0.1, 0.15);
+      stage->setMinMaxDistance(0.0, 0.15);
 
       geometry_msgs::msg::Vector3Stamped vec;
-      vec.header.frame_id = "object";
+      vec.header.frame_id = hand_frame;
       vec.vector.x = 1.0;
       stage->setDirection(vec);
       grasp->insert(std::move(stage));
@@ -174,18 +174,17 @@ mtc::Task MTCTaskNode::createTask()
       stage->setMonitoredStage(current_state_ptr);
 
       Eigen::Isometry3d grasp_frame_transform;
-      Eigen::Quaterniond q = Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitY()) * Eigen::AngleAxisd(M_PI, Eigen::Vector3d::UnitZ());
+      Eigen::Quaterniond q = Eigen::AngleAxisd(0, Eigen::Vector3d::UnitX()) * Eigen::AngleAxisd(-M_PI/2, Eigen::Vector3d::UnitY()) * Eigen::AngleAxisd(0, Eigen::Vector3d::UnitZ());
 
       grasp_frame_transform.linear() = q.matrix();
-      grasp_frame_transform.translation().x() = 0.2;
+      grasp_frame_transform.translation().x() = 0.16;
       // grasp_frame_transform.translation().z() = 0.1;
-
 
       // Copute IK
       auto wrapper = std::make_unique<mtc::stages::ComputeIK>("grasp pose IK", std::move(stage));
       wrapper->setMaxIKSolutions(10);
       wrapper->setMinSolutionDistance(1.0);
-      wrapper->setIKFrame(grasp_frame_transform, hand_frame);
+      wrapper->setIKFrame(grasp_frame_transform, hand_frame); // hand frame이 grasp frame으로 이동하는 역기구학 변환
       wrapper->properties().configureInitFrom(mtc::Stage::PARENT, { "eef", "group" });
       wrapper->properties().configureInitFrom(mtc::Stage::INTERFACE, { "target_pose" });
       grasp->insert(std::move(wrapper));
@@ -218,13 +217,13 @@ mtc::Task MTCTaskNode::createTask()
     {
       auto stage = std::make_unique<mtc::stages::MoveRelative>("lift object", cartesian_planner);
       stage->properties().configureInitFrom(mtc::Stage::PARENT, { "group" });
-      stage->setMinMaxDistance(0.1, 0.3);
+      stage->setMinMaxDistance(0.0, 0.3);
       stage->setIKFrame(hand_frame);
       stage->properties().set("marker_ns", "lift_object");
 
       geometry_msgs::msg::Vector3Stamped vec;
       vec.header.frame_id = "world";
-      vec.vector.z = 1.0;
+      vec.vector.z = 0.5;
       stage->setDirection(vec);
       grasp->insert(std::move(stage));
     }
