@@ -19,7 +19,7 @@ geometry_msgs::msg::Pose target_pose;
 
 void updateTargetPoseFromResponse(const geometry_msgs::msg::Pose &pose) {
   target_pose = pose;
-  RCLCPP_INFO(LOGGER, "Target Pose: x=%f, y=%f, z=%f", target_pose.position.x, target_pose.position.y, target_pose.position.z);
+  RCLCPP_INFO(LOGGER, "Target Pose: y=%f, z=%f", target_pose.position.y, target_pose.position.z);
 }
 
 int main(int argc, char **argv) {
@@ -39,13 +39,14 @@ int main(int argc, char **argv) {
   // 현재 상태 모니터를 위한 SingleThreadedExecutor 실행
   rclcpp::executors::SingleThreadedExecutor executor;
   executor.add_node(move_group_node);
-  std::thread([&executor]() { executor.spin(); }).detach();
+  std::thread executor_thread([&executor]() { executor.spin(); });
 
   // 서비스 클라이언트가 준비될 때까지 기다림
   while (!target_pose_client->wait_for_service(1s)) {
     RCLCPP_INFO(LOGGER, "서비스를 기다리는 중: vision/target_pose");
     if (!rclcpp::ok()) {
       RCLCPP_ERROR(LOGGER, "ROS 중지 신호를 받음. 종료합니다.");
+      executor_thread.join();
       return 1;
     }
   }
@@ -58,6 +59,7 @@ int main(int argc, char **argv) {
 
       // 서비스 호출
       auto future = target_pose_client->async_send_request(request);
+      RCLCPP_INFO(LOGGER, "서비스 호출: vision/target_pose");
 
       // 서비스 호출 결과 처리
       if (rclcpp::spin_until_future_complete(move_group_node, future) == rclcpp::FutureReturnCode::SUCCESS) {
@@ -121,6 +123,7 @@ int main(int argc, char **argv) {
     }
   }
 
+  executor_thread.join();
   rclcpp::shutdown();
   return 0;
 }

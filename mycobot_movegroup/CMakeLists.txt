@@ -43,6 +43,19 @@ ament_target_dependencies(mycobot_move_group_service_node
   moiro_interfaces
 )
 
+add_executable(mycobot_move_group_service_class_node src/mycobot_move_group_service_class.cpp)
+ament_target_dependencies(mycobot_move_group_service_class_node
+  rclcpp
+  geometry_msgs
+  moveit_core
+  moveit_ros_planning
+  moveit_ros_planning_interface
+  moveit_ros_move_group
+  tf2_ros
+  tf2_geometry_msgs
+  moiro_interfaces
+)
+
 
 # install
 install(TARGETS mycobot_move_group_service_node
@@ -50,6 +63,10 @@ install(TARGETS mycobot_move_group_service_node
 )
 
 install(TARGETS mycobot_move_group_topic_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(TARGETS mycobot_move_group_service_class_node
   DESTINATION lib/${PROJECT_NAME}
 )
 
