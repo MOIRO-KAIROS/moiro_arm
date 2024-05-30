@@ -125,6 +125,9 @@ private:
             target_pose.position.y = 0;
             target_pose.position.z = 0;
         }
+        else{
+            RCLCPP_INFO(this->get_logger(), "Envalid target pose");
+        }
         // 100ms 대기
         std::this_thread::sleep_for(100ms);
     }
