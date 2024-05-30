@@ -5,16 +5,6 @@ from rclpy.node import Node
 from sensor_msgs.msg import JointState
 
 from pymycobot.mycobot import MyCobot
-tm = 0
-
-# mc = MyCobot('/dev/ttyACM0', str(115200))
-# # gripper initailization
-# mc.set_gripper_calibration()
-# mc.set_gripper_mode(0)
-# mc.init_eletric_gripper()
-# time.sleep(1)
-# mc.set_free_mode(1)
-# time.sleep(0.05)
 
 class MyCobotListener(Node):
 
@@ -54,19 +44,15 @@ class MyCobotListener(Node):
         print("===="*3)
 
         data_list = [round(math.degrees(pos), 2) for pos in msg.position[1:]] + [msg.position[0]]
-        global tm
-        tm += 1
         data_list[6] = round(abs(-0.7-data_list[6])*117)
         if data_list[6] > 100:
             data_list[6] = 100
         data_list[6] = 100 - data_list[6]
-        self.get_logger().info(f'data list: {data_list}, {tm}')
+        self.get_logger().info(f'data list: {data_list}')
         self.mycobot.send_angles(data_list[:6], 80)
         time.sleep(0.1)
         self.mycobot.set_gripper_value(data_list[6], 80, 1)
         time.sleep(0.1)
-        # self.mycobot.set_gripper_value("as", 80)
-        # self.get_logger().info(f'joint angles: {msg}, {tm}')
 
 def main(args=None):
     rclpy.init(args=args)
