@@ -4,7 +4,7 @@ from moveit_configs_utils import MoveItConfigsBuilder
 
 
 def generate_launch_description():
-    moveit_config = MoveItConfigsBuilder("mycobot", package_name="mycobot_moveit_config").to_moveit_configs()
+    moveit_config = MoveItConfigsBuilder("moiro", package_name="mycobot_moveit_config").to_moveit_configs()
     use_sim_time = True
     # MoveGroupInterface demo executable
     move_group_demo = Node(

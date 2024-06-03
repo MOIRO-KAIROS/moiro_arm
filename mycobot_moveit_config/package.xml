@@ -4,7 +4,7 @@
   <name>mycobot_moveit_config</name>
   <version>0.3.0</version>
   <description>
-     An automatically generated package with all the configuration and launch files for using the mycobot with the MoveIt Motion Planning Framework
+     An automatically generated package with all the configuration and launch files for using the moiro with the MoveIt Motion Planning Framework
   </description>
   <maintainer email="mincheol710313@gmail.com">godssi</maintainer>
 
@@ -31,12 +31,12 @@
   <!-- <exec_depend>joint_trajectory_controller</exec_depend> -->
   <!-- <exec_depend>gazebo_ros_control</exec_depend> -->
   <exec_depend>controller_manager</exec_depend>
+  <exec_depend>moiro_description</exec_depend>
   <exec_depend>moveit_configs_utils</exec_depend>
   <exec_depend>moveit_ros_move_group</exec_depend>
   <exec_depend>moveit_ros_visualization</exec_depend>
   <exec_depend>moveit_ros_warehouse</exec_depend>
   <exec_depend>moveit_setup_assistant</exec_depend>
-  <exec_depend>mycobot_description</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>rviz2</exec_depend>
   <exec_depend>rviz_common</exec_depend>

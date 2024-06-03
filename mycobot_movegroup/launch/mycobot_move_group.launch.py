@@ -8,8 +8,8 @@ from moveit_configs_utils import MoveItConfigsBuilder
 
 def generate_launch_description():
     moveit_config = (
-        MoveItConfigsBuilder("mycobot", package_name="mycobot_moveit_config")
-        .robot_description(file_path="config/mycobot.urdf.xacro")
+        MoveItConfigsBuilder("moiro", package_name="mycobot_moveit_config")
+        .robot_description(file_path="config/moiro.urdf.xacro")
         .trajectory_execution(file_path="config/moveit_controllers.yaml")
         # only use ompl for planning
         .planning_pipelines(pipelines=["ompl"])
@@ -78,11 +78,16 @@ def generate_launch_description():
         output="both",
     )
 
+    # joint_state_publisher_gui_node = Node(
+    #     package='joint_state_publisher_gui',
+    #     executable='joint_state_publisher_gui',
+    #     name='joint_state_publisher_gui'
+    # )
+
     # Load controllers
     load_controllers = []
     for controller in [
         "mycobot_arm_controller",
-        "hand_controller",
         "joint_state_broadcaster",
     ]:
         load_controllers += [

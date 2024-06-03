@@ -47,12 +47,16 @@ int main(int argc, char **argv)
     if (target_pose.position.y != 0.0 || target_pose.position.z != 0.0)
     {
       geometry_msgs::msg::Pose current_pose = move_group.getCurrentPose().pose;
+      geometry_msgs::msg::Pose base_plate_pose = move_group.getCurrentPose("base_plate").pose;
       std::vector<geometry_msgs::msg::Pose> waypoints;
       waypoints.push_back(current_pose);
 
-      geometry_msgs::msg::Pose eff_target_pose = target_pose;
+      geometry_msgs::msg::Pose eff_target_pose;
       eff_target_pose.position.x = current_pose.position.x;
+      eff_target_pose.position.y = base_plate_pose.position.y + target_pose.position.y;
+      eff_target_pose.position.z = base_plate_pose.position.z + target_pose.position.z;
       eff_target_pose.orientation.w = 1.0;
+      RCLCPP_INFO(LOGGER, "Eff Target Pose: x=%f, y=%f, z=%f", eff_target_pose.position.x, eff_target_pose.position.y, eff_target_pose.position.z);
       waypoints.push_back(eff_target_pose);
 
       moveit_msgs::msg::RobotTrajectory trajectory;
