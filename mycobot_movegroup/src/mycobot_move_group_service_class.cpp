@@ -23,11 +23,10 @@ class MyCobotMoveGroup : public rclcpp::Node {
 public:
     MyCobotMoveGroup() : Node("mycobot_move_group_service_class"), move_group_(std::shared_ptr<rclcpp::Node>(this), PLANNING_GROUP) {
         RCLCPP_INFO(this->get_logger(), "Initialized node");
-  
+
         // Moveit 초기화
         move_group_.startStateMonitor();
         RCLCPP_INFO(this->get_logger(), "MoveGroupInterface initialized");
-        move_group_.setPoseReferenceFrame("base_plate");
         RCLCPP_INFO(this->get_logger(), "Reference frame: %s", move_group_.getPlanningFrame().c_str());
         RCLCPP_INFO(this->get_logger(), "End effector link: %s", move_group_.getEndEffectorLink().c_str());
 
@@ -81,27 +80,23 @@ private:
     void MyCobotRun(){
         geometry_msgs::msg::Pose target_pose;
         target_pose.position.x = std::get<0>(p.goal);
-        // Target Pose 제한
         target_pose.position.y = std::get<1>(p.goal);
-        if(target_pose.position.y >= 0.3){
-            target_pose.position.y = 0.3;
+        if(target_pose.position.y > 0.3){
+             target_pose.position.y = 0.3;
         }
-        else if(target_pose.position.y <= -0.3){
-            target_pose.position.y = -0.3;
+        else if(target_pose.position.y < -0.3){
+             target_pose.position.y = -0.3;
         }
-        
         target_pose.position.z = std::get<2>(p.goal);
-        if (target_pose.position.z >= 0.5) {
-            target_pose.position.z = 0.5;
+        if(target_pose.position.z > 0.5){
+             target_pose.position.z = 0.5;
         }
-        else if(target_pose.position.z <= 0.05){
-            target_pose.position.z = 0.05;
+        else if(target_pose.position.z < 0.1){
+             target_pose.position.z = 0.1;
         }
-        
         if (target_pose.position.y != 0.0 || target_pose.position.z != 0.0) {
             geometry_msgs::msg::Pose current_pose = move_group_.getCurrentPose().pose;
             geometry_msgs::msg::Pose base_plate_pose = move_group_.getCurrentPose("base_plate").pose;
-            // RCLCPP_INFO(this->get_logger(), "Base Plate Pose: x=%f, y=%f, z=%f", base_plate_pose.position.x, base_plate_pose.position.y, base_plate_pose.position.z);
             std::vector<geometry_msgs::msg::Pose> waypoints;
             waypoints.push_back(current_pose);
 
@@ -110,12 +105,12 @@ private:
             eff_target_pose.position.y = base_plate_pose.position.y + target_pose.position.y;
             eff_target_pose.position.z = base_plate_pose.position.z + target_pose.position.z;
             eff_target_pose.orientation.w = 1.0;
-            RCLCPP_INFO(this->get_logger(), "Eff Target Pose: x=%f, y=%f, z=%f", eff_target_pose.position.x, eff_target_pose.position.y, eff_target_pose.position.z);
+            RCLCPP_INFO(this->get_logger(), "목표 포즈: x=%f, y=%f, z=%f", eff_target_pose.position.x, eff_target_pose.position.y, eff_target_pose.position.z);
             waypoints.push_back(eff_target_pose);
 
             moveit_msgs::msg::RobotTrajectory trajectory;
             const double jump_threshold = 10.0;
-            const double eef_step = 0.01;
+            const double eef_step = 0.03;
             double fraction = move_group_.computeCartesianPath(waypoints, eef_step, jump_threshold, trajectory);
             RCLCPP_INFO(this->get_logger(), "계획 시각화 (카르테시안 경로) (%.2f%% 달성)", fraction * 100.0);
 
@@ -126,7 +121,7 @@ private:
             trajectory_processing::IterativeParabolicTimeParameterization iptp;
             bool success = iptp.computeTimeStamps(rt, 1.0, 1.0);
             if (!success) {
-                RCLCPP_WARN(this->get_logger(), "카르테시안 경로의 시간 매개변수화 실패");
+            RCLCPP_WARN(this->get_logger(), "카르테시안 경로의 시간 매개변수화 실패");
             }
 
             rt.getRobotTrajectoryMsg(trajectory);
@@ -143,9 +138,6 @@ private:
             target_pose.position.x = 0;
             target_pose.position.y = 0;
             target_pose.position.z = 0;
-        }
-        else{
-            RCLCPP_INFO(this->get_logger(), "Envalid target pose");
         }
         // 100ms 대기
         std::this_thread::sleep_for(100ms);
