@@ -30,6 +30,8 @@ class MyCobotListener(Node):
     def listener_callback(self, msg):
         data_list = []
         # print(msg.name)
+        if(len(msg.name) != 6):
+            return
         joint_data = sorted(zip(msg.name, msg.position), key=lambda x: x[0])
         msg.name, msg.position = zip(*joint_data)
         msg.position = list(msg.position)
@@ -37,6 +39,9 @@ class MyCobotListener(Node):
         print("===="*3)
 
         data_list = [round(math.degrees(pos), 2) for pos in msg.position]
+        if all(value == 0 for value in data_list):
+            print("All values are 0")
+            return
         self.get_logger().info(f'data list: {data_list}')
         data_list[2] = - data_list[2]
         self.mycobot.send_angles(data_list, 80)

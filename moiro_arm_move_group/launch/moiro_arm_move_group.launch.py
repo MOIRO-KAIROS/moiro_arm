@@ -10,6 +10,7 @@ def generate_launch_description():
     moveit_config = (
         MoveItConfigsBuilder("moiro_arm", package_name="moiro_arm_moveit_config")
         .robot_description(file_path="config/moiro_arm.urdf.xacro")
+        .robot_description_semantic(file_path="config/moiro_arm.srdf")
         .trajectory_execution(file_path="config/moveit_controllers.yaml")
         # only use ompl for planning
         .planning_pipelines(pipelines=["ompl"])
@@ -48,7 +49,7 @@ def generate_launch_description():
         executable="static_transform_publisher",
         name="static_transform_publisher",
         output="log",
-        arguments=["--frame-id", "world", "--child-frame-id", "base_link"],
+        arguments=["--frame-id", "base_plate", "--child-frame-id", "link0"],
     )
 
     # Publish the robot state
@@ -59,6 +60,7 @@ def generate_launch_description():
         output="both",
         parameters=[
             moveit_config.robot_description,
+            moveit_config.robot_description_semantic,
         ],
     )
 

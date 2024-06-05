@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <robot name="moiro_arm" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<xacro:include filename="$(find moiro_arm_description)/urdf/materials.xacro" />
+<xacro:include filename="$(find moiro_arm_description)/urdf/materials.xacro"/>
 <link name="link0">
   <inertial>
     <origin xyz="-2.1294138884612695e-08 -0.012465741614897647 0.043604773377263574" rpy="0 0 0"/>

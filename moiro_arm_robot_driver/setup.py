@@ -24,10 +24,10 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'slider_control = mycobot_robot_driver.slider_control:main',
-            'sync_play = mycobot_robot_driver.sync_play:main',
-            'listen_real = mycobot_robot_driver.listen_real:main',
-            'follow_display = mycobot_robot_driver.follow_display:main'
+            'slider_control = moiro_arm_robot_driver.slider_control:main',
+            'sync_play = moiro_arm_robot_driver.sync_play:main',
+            'listen_real = moiro_arm_robot_driver.listen_real:main',
+            'follow_display = moiro_arm_robot_driver.follow_display:main'
         ],
     },
 )

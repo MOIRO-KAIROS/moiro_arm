@@ -2,3 +2,19 @@ moiro_arm:
   kinematics_solver: kdl_kinematics_plugin/KDLKinematicsPlugin
   kinematics_solver_search_resolution: 0.0050000000000000001
   kinematics_solver_timeout: 0.0050000000000000001
+  joint_names:
+    - joint_1
+    - joint_2
+    - joint_3
+    - joint_4
+    - joint_5
+    - joint_6
+    - wheel_left_joint
+    - wheel_right_joint
+  link_names:
+    - link_1
+    - link_2
+    - link_3
+    - link_4
+    - link_5
+    - link_6
