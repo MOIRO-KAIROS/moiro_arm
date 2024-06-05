@@ -1,9 +1,0 @@
-# Default initial positions for moiro's ros2_control fake system
-
-initial_positions:
-  mycobot_joint_1: 0
-  mycobot_joint_2: 0
-  mycobot_joint_3: 0
-  mycobot_joint_4: 0
-  mycobot_joint_5: 0
-  mycobot_joint_6: 0
