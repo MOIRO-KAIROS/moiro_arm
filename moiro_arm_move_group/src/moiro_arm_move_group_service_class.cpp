@@ -104,8 +104,12 @@ public:
             eff_target_pose.position.z = target_pose.position.z;
             eff_target_pose.orientation.w = 1.0;
             RCLCPP_INFO(this->get_logger(), "목표 포즈: x=%f, y=%f, z=%f", eff_target_pose.position.x, eff_target_pose.position.y, eff_target_pose.position.z);
+            // Target Pose가 Current Pose와 거의 동일하면 계산하지 않음
+            if (fabs(eff_target_pose.position.y-current_pose.position.y) < 0.05 && fabs(eff_target_pose.position.z - current_pose.position.z) < 0.05){
+                RCLCPP_INFO(this->get_logger(), "목표 포즈가 현재 포즈와 거의 동일합니다. 계산하지 않습니다.");
+                return;
+            }
             waypoints.push_back(eff_target_pose);
-
             moveit_msgs::msg::RobotTrajectory trajectory;
             const double jump_threshold = 10.0;
             const double eef_step = 0.03;
@@ -137,8 +141,8 @@ public:
             target_pose.position.y = 0;
             target_pose.position.z = 0;
         }
-        // 100ms 대기
-        std::this_thread::sleep_for(100ms);
+        // 0.5초 대기
+        std::this_thread::sleep_for(500ms);
     }
 
     const std::string PLANNING_GROUP = "moiro_arm";
