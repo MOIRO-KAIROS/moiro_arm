@@ -23,3 +23,7 @@ Moveit Humble Documentation(https://moveit.ros.org/install-moveit2/source/)
 
 ## Result(MoveIt2 Move Group 이용)
 [![Video Label](http://img.youtube.com/vi/h4u68pizy8g/0.jpg)](https://youtu.be/h4u68pizy8g)
+```sh
+ros2 launch moiro_arm_move_group moiro_arm_move_group.launch.py
+ros2 launch moiro_arm_move_group moiro_arm_move_group_topic_interface.launch.py
+```
