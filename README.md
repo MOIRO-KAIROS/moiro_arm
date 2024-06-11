@@ -22,5 +22,3 @@ MoveIt2 패키지 설치는 다음 링크를 참고하십시오.
 Moveit Humble Documentation(https://moveit.ros.org/install-moveit2/source/)
 
 ## Result(MoveIt2 Move Group 이용)
-
-
