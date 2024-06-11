@@ -22,3 +22,4 @@ MoveIt2 패키지 설치는 다음 링크를 참고하십시오.
 Moveit Humble Documentation(https://moveit.ros.org/install-moveit2/source/)
 
 ## Result(MoveIt2 Move Group 이용)
+[![Video Label](http://img.youtube.com/vi/h4u68pizy8g/0.jpg)](https://youtu.be/h4u68pizy8g)
