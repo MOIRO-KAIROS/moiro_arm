@@ -12,15 +12,25 @@ colcon build
 ```
 ### 2) Install dependency packages
 다음 패키지들이 필요할 수 있습니다.
-- ros2_control
-- ros2_controller
-- moveit
+
+- ros-humble-gazebo-ros2-control
+- ros-humble-ros2-controllers
+- ros-humble-controller-manager
+- ros-humble-moveit
+- (ros-humble-gazebo-ros2-control)
+
 ``` sh
-sudo apt install -y ros-humble-ros2-control\
-  ros-humble-ros2-controller
+sudo apt install -y ros-humble-ros2-control \
+  ros-humble-ros2-controllers \
+  ros-humble-controller-manager \
+  ros-humble-moveit
 ```
+``` sh
+pip install pymycobot moveit_configs_utils
+```
+
 #### 참고: MoveIt2 패키지 설치는 다음 링크를 참고하십시오.
-Moveit Humble Documentation(https://moveit.ros.org/install-moveit2/source/)
+[Moveit Humble Documentation](https://moveit.ros.org/install-moveit2/source/)
 
 ## 2. Result
 - MoveIt2 Move Group 이용
@@ -34,4 +44,10 @@ Moveit Humble Documentation(https://moveit.ros.org/install-moveit2/source/)
 ```sh
 ros2 launch moiro_arm_move_group moiro_arm_move_group.launch.py
 ros2 launch moiro_arm_move_group moiro_arm_move_group_topic_interface.launch.py
+```
+
+- 실물 MyCobot 제어를 위한 Sync Play
+```sh
+sudo chmod 777 /dev/ttyACM0
+ros2 run moiro_arm_robot_driver sync_play
 ```
