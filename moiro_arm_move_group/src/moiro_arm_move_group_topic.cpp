@@ -30,7 +30,7 @@ int main(int argc, char **argv)
   auto target_pose_sub = move_group_node->create_subscription<geometry_msgs::msg::Pose>("target_pose", 10, targetPoseCallback);
 
   // Moveit Initialization
-  static const std::string PLANNING_GROUP = "mycobot_arm";
+  static const std::string PLANNING_GROUP = "moiro_arm";
   moveit::planning_interface::MoveGroupInterface move_group(move_group_node, PLANNING_GROUP);
   move_group.startStateMonitor();
 

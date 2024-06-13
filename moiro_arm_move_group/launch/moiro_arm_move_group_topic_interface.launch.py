@@ -4,12 +4,12 @@ from moveit_configs_utils import MoveItConfigsBuilder
 
 
 def generate_launch_description():
-    moveit_config = MoveItConfigsBuilder("moiro", package_name="mycobot_moveit_config").to_moveit_configs()
+    moveit_config = MoveItConfigsBuilder("moiro_arm", package_name="moiro_arm_moveit_config").to_moveit_configs()
     use_sim_time = True
     # MoveGroupInterface demo executable
     move_group_demo = Node(
-        package="mycobot_movegroup",
-        executable="mycobot_move_group_topic_node",
+        package="moiro_arm_move_group",
+        executable="moiro_arm_move_group_topic_node",
         output="screen",
         parameters=[
             {"use_sim_time": use_sim_time},
